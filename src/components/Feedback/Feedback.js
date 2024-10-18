@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import "./Feedback.css";
 
 const Feedback = () => {
-  const formRef = useRef(null);
+  // const formRef = useRef(null);
 
   useEffect(() => {
     const script1 = document.createElement("script");

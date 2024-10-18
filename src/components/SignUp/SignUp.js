@@ -22,7 +22,7 @@ const SignUp = () => {
     if (userId) {
       navigate("/");
     }
-  }, [userId, dispatch]);
+  }, [userId, navigate]);
 
   const handleOnChange = (e) => {
     setUserDetails({
