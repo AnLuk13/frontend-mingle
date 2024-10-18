@@ -1,5 +1,3 @@
-/* eslint-disable no-useless-concat */
-
 import React, { useEffect, useRef } from "react";
 import "./Feedback.css";
 
@@ -23,58 +21,58 @@ const Feedback = () => {
     };
   }, []);
 
-  const sendMail = () => {
-    let likes = document.getElementById("liked").value;
-    let usersname = document.getElementById("username").value;
-    let usersemail = document.getElementById("useremail").value;
-    let improvement = document.getElementById("improve").value;
-    let feature = document.getElementById("features").value;
-    let comment = document.getElementById("comments").value;
-
-    let body =
-      "Name of the User: <br/>" +
-      usersname +
-      "<br/>" +
-      "Email of the User: <br/>" +
-      usersemail +
-      "<br/><br/>" +
-      "What did you like most about AR-Webstore? <br/>" +
-      likes +
-      "<br/><br/> Will our 3D and AR features improve your shopping experience if we integrate it on an online e-commerce store ?<br/>" +
-      improvement +
-      "<br/><br/> What are the other features that excite you to have them on AR-Webstore ?<br/>" +
-      feature +
-      "<br/> <br/>Any other comments?<br/>" +
-      comment;
-
-    window.Email.send({
-      Host: "smtp.elasticemail.com",
-      Username: "shwetkhatri2001@gmail.com",
-      Password: "BAAF238142FDFE27699F12B3FC14B1A5C9F7",
-      To: "shwetkhatri2001@gmail.com",
-      From: "shwetkhatri2001@gmail.com",
-      Subject: "AR-Webstore has got a feedback",
-      Body: body,
-    }).then((message) => {
-      if (message === "OK") {
-        window
-          .swal(
-            "Successfull",
-            "Thanks! We've received your feedback",
-            "success",
-          )
-          .then(() => {
-            formRef.current.reset();
-          });
-      } else {
-        window.swal(
-          "Something Wrong",
-          "Your FeedBack is not Received",
-          "error",
-        );
-      }
-    });
-  };
+  // const sendMail = () => {
+  //   let likes = document.getElementById("liked").value;
+  //   let usersname = document.getElementById("username").value;
+  //   let usersemail = document.getElementById("useremail").value;
+  //   let improvement = document.getElementById("improve").value;
+  //   let feature = document.getElementById("features").value;
+  //   let comment = document.getElementById("comments").value;
+  //
+  //   let body =
+  //     "Name of the User: <br/>" +
+  //     usersname +
+  //     "<br/>" +
+  //     "Email of the User: <br/>" +
+  //     usersemail +
+  //     "<br/><br/>" +
+  //     "What did you like most about AR-Webstore? <br/>" +
+  //     likes +
+  //     "<br/><br/> Will our 3D and AR features improve your shopping experience if we integrate it on an online e-commerce store ?<br/>" +
+  //     improvement +
+  //     "<br/><br/> What are the other features that excite you to have them on AR-Webstore ?<br/>" +
+  //     feature +
+  //     "<br/> <br/>Any other comments?<br/>" +
+  //     comment;
+  //
+  //   window.Email.send({
+  //     Host: "smtp.elasticemail.com",
+  //     Username: "shwetkhatri2001@gmail.com",
+  //     Password: "BAAF238142FDFE27699F12B3FC14B1A5C9F7",
+  //     To: "shwetkhatri2001@gmail.com",
+  //     From: "shwetkhatri2001@gmail.com",
+  //     Subject: "AR-Webstore has got a feedback",
+  //     Body: body,
+  //   }).then((message) => {
+  //     if (message === "OK") {
+  //       window
+  //         .swal(
+  //           "Successfull",
+  //           "Thanks! We've received your feedback",
+  //           "success",
+  //         )
+  //         .then(() => {
+  //           formRef.current.reset();
+  //         });
+  //     } else {
+  //       window.swal(
+  //         "Something Wrong",
+  //         "Your FeedBack is not Received",
+  //         "error",
+  //       );
+  //     }
+  //   });
+  // };
 
   return <div className="container">test</div>;
 };

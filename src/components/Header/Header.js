@@ -7,7 +7,6 @@ import {
   selectUserId,
   selectWishlist,
 } from "../../lib/redux/features/sliceSelectors";
-import wishList from "../Wishlist/WishList";
 
 const Header = () => {
   const [showMobileSidebar, setShowMobileSidebar] = useState(true);

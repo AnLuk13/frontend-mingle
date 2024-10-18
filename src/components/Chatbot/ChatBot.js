@@ -21,11 +21,11 @@ const ChatBot = () => {
   ]);
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("");
-  const [dimensions, setDimensions] = useState({
-    length: 0,
-    width: 0,
-    height: 0,
-  });
+  // const [dimensions, setDimensions] = useState({
+  //   length: 0,
+  //   width: 0,
+  //   height: 0,
+  // });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,7 +81,7 @@ const ChatBot = () => {
       const length = parseFloat(dimensionMatch[1]) || 0;
       const width = parseFloat(dimensionMatch[2]) || 0;
       const height = parseFloat(dimensionMatch[3]) || 0;
-      setDimensions({ length, width, height });
+      // setDimensions({ length, width, height });
       filterProducts(categoryMatch ? categoryMatch[0] : category, {
         length,
         width,
