@@ -1,0 +1,233 @@
+:root {
+  --Bg: #000;
+  --text: #fff;
+}
+header {
+  align-items: center;
+  border-bottom: 1px solid var(--background);
+  background: var(--primary);
+  display: flex;
+  padding: 0 40px;
+  height: 80px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 999;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: none !important;
+}
+::-webkit-scrollbar-thumb {
+  background: #68707a;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #68707a;
+}
+/* styles for navigation links */
+
+nav {
+  align-items: center;
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+nav .navtop {
+  height: 80px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: fit-content;
+}
+
+.desktop-nav {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.desktop-nav li {
+  padding: 0 16px;
+}
+
+.navigationLinks {
+  cursor: pointer;
+  color: var(--secondary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.5s all ease-in-out;
+  position: relative;
+  text-transform: uppercase;
+  font-family: var(--font-family);
+}
+
+.navigationLinks::before, .project-title::before {
+  content: "";
+  background-color: var(--primary);
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 2px;
+  width: 0;
+  transition: 0.3s ease-in-out;
+}
+
+.navigationLinks:hover::before, .project-title:hover::before {
+  content: "";
+  background-color: black;
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 2px;
+  width: 100%;
+}
+
+nav .project-title {
+  font-family: var(--font-family);
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--secondary);
+  letter-spacing: 4px;
+  transition: 0.5s ease;
+}
+
+nav .project-title:hover {
+  text-decoration: none;
+  letter-spacing: 4px;
+}
+
+.cart-count {
+  height: 22px;
+  width: 22px;
+  background: black;
+  border-radius: 50px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  padding: 0;
+  list-style-type: none;
+  display: block;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  right: 0;
+  top: 35px;
+  border-radius: 4px;
+  text-align: left;
+}
+
+.dropdown-menu li {
+  padding: 12px 16px;
+}
+
+/* styles for mobile menu icon */
+.mobile-menu-icon {
+  cursor: pointer;
+  display: none;
+}
+
+.mobile-menu-icon div {
+  background: black;
+  border-radius: 0.5rem;
+  height: 3px;
+  transition: transform 0.3s ease;
+  width: 2rem;
+}
+
+.active .firstbar:nth-child(1) {
+  transform: rotate(45deg) translateX(1px) translateY(2px);
+}
+
+.active .secondbar:nth-child(2) {
+  transform: rotate(-45deg);
+}
+
+/* Media Query for small screens */
+@media screen and (max-width: 768px) {
+  header {
+    display: flex;
+    align-items: center;
+  }
+
+  nav {
+    box-sizing: border-box;
+    flex-direction: column;
+  }
+
+  nav .navtop {
+    top: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+    padding: 0 10px;
+  }
+
+  .dropdown-menu {
+    top: 40px;
+    left: 0;
+  }
+
+  .dropdown-menu li a{
+    margin: 0;
+  }
+
+  nav a {
+    padding: 0.5rem 0;
+  }
+
+  .mobile-menu-icon {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.4rem;
+  }
+
+  .active {
+    row-gap: 0;
+  }
+
+  .desktop-nav {
+    position: fixed;
+    top: 80px;
+    right: -100%; /* Initially off-screen */
+    width: 50%; /* Adjust the width as needed */
+    height: 100%;
+    background-color: var(--primary);
+    transition: right 0.3s ease; /* Transition the right property */
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    padding: 5% 5%;
+  }
+
+  .desktop-nav.show {
+    right: 0; /* Slide in from the right */
+  }
+  .desktop-nav a {
+    display: block;
+    text-decoration: none;
+    margin-bottom: 10%; /* Add margin between the links */
+  }
+}

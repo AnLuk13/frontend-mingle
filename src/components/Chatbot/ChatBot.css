@@ -1,0 +1,114 @@
+.chatBox {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    border: 2px solid var(--secondary);
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.closeBtn {
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 55px;
+    width: 55px;
+    /*border: 1px solid var(--secondary);*/
+    background: #f1efeb;
+    box-shadow: 0px 0px 25px -3px rgba(0,0,0,0.75);
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.chatName {
+    background-color: var(--secondary);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatContent {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chatInputBox {
+    border: none;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-top: 1px solid #ccc;
+    display: flex;
+}
+
+.chatInputBox input {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+.sendBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    padding: 10px;
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 0 15px 15px 0;
+}
+
+.chatInput {
+    border-radius: 12px 0 0 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.userMessage {
+    align-self: flex-end;
+    background-color: var(--secondary);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.assistantMessage {
+    align-self: flex-start;
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.assistantMessageLink {
+    color: var(--secondary);
+}
+
+.toggleChatBtn {
+    background: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
