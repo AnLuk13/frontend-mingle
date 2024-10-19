@@ -6,6 +6,7 @@ import { isIOS } from "react-device-detect";
 import CloseBtn from "../Icons/CloseBtn";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import {MoonLoader} from "react-spinners";
 
 const ProductItem = ({ addToWishlist, removeFromWishlist }) => {
   const { id } = useParams();
@@ -31,16 +32,20 @@ const ProductItem = ({ addToWishlist, removeFromWishlist }) => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className={"responseScreen"}>
+      <MoonLoader color={"black"} size={60}/>
+    </div>;
   }
 
   if (!item) {
-    return <div>Product not found!</div>;
+    return <div className={"responseScreen"}>
+      Product not found!
+    </div>;
   }
 
   return (
-    <div className="productItemContainer">
-      <div className={"productItem-title"}>{item.name}</div>
+      <div className="productItemContainer">
+        <div className={"productItem-title"}>{item.name}</div>
       <div className={"modelViewerInfoBox"}>
         <ModelViewer
           item={item}

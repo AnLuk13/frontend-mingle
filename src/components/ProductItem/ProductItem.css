@@ -1,3 +1,12 @@
+.responseScreen {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    height: 100%;
+}
+
 .productItemContainer {
     margin-top: 80px;
     display: flex;
@@ -44,4 +53,21 @@
 .itemText {
     font-size: 18px;
     font-weight: 500;
+}
+
+@media only screen and (max-width: 1124px) {
+    .productItem-title {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        font-size: 80px;
+        padding: 15px 10px 0;
+    }
+}
+
+@media only screen and (max-width: 984px) {
+    .productItem-title {
+        font-size: 50px;
+        padding: 15px 10px 0;
+    }
 }

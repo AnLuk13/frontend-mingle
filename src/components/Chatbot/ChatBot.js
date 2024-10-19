@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ChatBot.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectProductsDetails } from "../../lib/redux/features/productsSlice";
-import { toggleChatbot } from "../../lib/redux/features/chatbotSlice";
+import {
+  toggleChatbot,
+  addMessage,
+  saveScrollPosition,
+} from "../../lib/redux/features/chatbotSlice";
 import { selectChatBotState } from "../../lib/redux/features/sliceSelectors";
 import { Link } from "react-router-dom";
 import ChatBotIcon from "../Icons/ChatbotIcon";
@@ -13,58 +17,24 @@ const ChatBot = () => {
   const products = useSelector(selectProductsDetails);
   const chatBotState = useSelector(selectChatBotState);
   const dispatch = useDispatch();
-
-  const [messages, setMessages] = useState([
-    {
-      text: "Hello! How can I assist you today? You can tell me the type of category and the dimensions, and I will find the furniture for you.",
-    },
-  ]);
+  const chatContentRef = useRef(null);
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("");
-  // const [dimensions, setDimensions] = useState({
-  //   length: 0,
-  //   width: 0,
-  //   height: 0,
-  // });
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 150 && chatBotState.isOpen) {
-  //       dispatch(toggleChatbot(false));
-  //     }
-  //   };
-  //
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [chatBotState.isOpen, dispatch]);
 
   useEffect(() => {
-    // Enable Virtual Keyboard overlay mode if supported
-    if ("virtualKeyboard" in navigator) {
-      navigator.virtualKeyboard.overlaysContent = true;
-
-      // Listen for changes in the virtual keyboard's geometry
-      navigator.virtualKeyboard.addEventListener("geometrychange", (event) => {
-        const { height } = event.target.boundingRect;
-        document.documentElement.style.setProperty(
-            "--keyboard-height",
-            `${height}px`
-        );
-      });
+    if (chatBotState.isOpen && chatContentRef.current) {
+      chatContentRef.current.scrollTop = chatBotState.scrollPosition;
     }
-  }, []);
+  }, [chatBotState.isOpen, chatBotState.scrollPosition]);
 
-  useEffect(() => {
-    const chatContent = document.querySelector(".chatContent");
-    if (chatContent) {
-      chatContent.scrollTop = chatContent.scrollHeight;
+  const handleScroll = () => {
+    if (chatContentRef.current) {
+      dispatch(saveScrollPosition(chatContentRef.current.scrollTop));
     }
-  }, [messages]);
+  };
 
   const sendMessage = (message, id = null) => {
-    setMessages((prev) => [...prev, { text: message, id }]); // Ensure every message has 'text' and optionally 'id'
+    dispatch(addMessage({ text: message, id }));
   };
 
   const handleInputChange = (e) => {
@@ -104,7 +74,6 @@ const ChatBot = () => {
       const length = parseFloat(dimensionMatch[1]) || 0;
       const width = parseFloat(dimensionMatch[2]) || 0;
       const height = parseFloat(dimensionMatch[3]) || 0;
-      // setDimensions({ length, width, height });
       filterProducts(categoryMatch ? categoryMatch[0] : category, {
         length,
         width,
@@ -121,7 +90,6 @@ const ChatBot = () => {
     const filteredProducts = products.items.filter((product) => {
       const productDimensions = product.dimensions || {};
 
-      // Comparison logic: filter by category and check dimensions
       const matchesCategory =
         !category || product.category.toLowerCase() === category.toLowerCase();
       const matchesDimensions =
@@ -154,13 +122,17 @@ const ChatBot = () => {
             MinglerAI
             <button
               className="toggleChatBtn"
-              onClick={() => dispatch(toggleChatbot(chatBotState.isOpen))}
+              onClick={() => dispatch(toggleChatbot())}
             >
               <CloseBtn color={"#fff"} />
             </button>
           </div>
-          <div className="chatContent">
-            {messages.map((msg, idx) => (
+          <div
+            className="chatContent"
+            ref={chatContentRef}
+            onScroll={handleScroll}
+          >
+            {chatBotState.messages.map((msg, idx) => (
               <div
                 key={idx}
                 className={`chatMessage ${
@@ -173,11 +145,12 @@ const ChatBot = () => {
                   <Link
                     className={"assistantMessageLink"}
                     to={`/products/${msg.id}`}
+                    onClick={() => dispatch(toggleChatbot())}
                   >
                     {msg.text}
-                  </Link> // Create a link if there's an ID
+                  </Link>
                 ) : (
-                  <span>{msg.text}</span> // Otherwise, just show plain text
+                  <span>{msg.text}</span>
                 )}
               </div>
             ))}
@@ -202,10 +175,7 @@ const ChatBot = () => {
           </div>
         </div>
       ) : (
-        <button
-          className="closeBtn"
-          onClick={() => dispatch(toggleChatbot(chatBotState.isOpen))}
-        >
+        <button className="closeBtn" onClick={() => dispatch(toggleChatbot())}>
           <ChatBotIcon />
         </button>
       )}

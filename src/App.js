@@ -27,14 +27,14 @@ import {
   selectProductsDetails,
 } from "./lib/redux/features/productsSlice";
 import ChatBot from "./components/Chatbot/ChatBot";
-import {setUser, setUserId} from "./lib/redux/features/userSlice";
+import { setUser, setUserId } from "./lib/redux/features/userSlice";
 
 const App = () => {
   const dispatch = useDispatch();
   const userId = useSelector(selectUserId);
   const productsDetails = useSelector(selectProductsDetails);
 
-  console.log(process.env.REACT_APP_API_URL)
+  console.log(process.env.REACT_APP_API_URL);
 
   const handleAddToWishlist = async (item) => {
     try {
@@ -43,9 +43,12 @@ const App = () => {
         return;
       }
       dispatch(addToWishlist(item));
-      await axios.put(`${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`, {
-        productId: item._id,
-      });
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
+        {
+          productId: item._id,
+        },
+      );
     } catch (error) {
       window.location.href = "/login";
     }
@@ -58,9 +61,12 @@ const App = () => {
         return;
       }
       dispatch(removeFromWishlist(id)); // Use Redux to remove from wishlist
-      await axios.put(`${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`, {
-        productId: id,
-      });
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
+        {
+          productId: id,
+        },
+      );
     } catch (error) {
       console.error("Error removing product from wishlist", error.message);
     }
@@ -68,16 +74,21 @@ const App = () => {
 
   useEffect(() => {
     const getSessionIdFromCookies = async () => {
-      const cookies = document.cookie.split('; ').find(row => row.startsWith('sessionId='));
+      const cookies = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("sessionId="));
       if (cookies) {
-        const sessionId = cookies.split('=')[1];
+        const sessionId = cookies.split("=")[1];
         if (!userId) {
           dispatch(setUserId(sessionId));
         }
         try {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${sessionId}`, {
-            withCredentials: true,
-          });
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/users/${sessionId}`,
+            {
+              withCredentials: true,
+            },
+          );
           const user = response.data;
           if (user && user.wishlist) {
             dispatch(setUser(user));
@@ -90,7 +101,6 @@ const App = () => {
     };
     getSessionIdFromCookies();
   }, [userId, dispatch]);
-
 
   console.log(userId);
 
