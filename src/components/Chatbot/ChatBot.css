@@ -22,7 +22,7 @@
         right: 0;
         left: 0;
         width: 100%;
-        height: calc(100vh - env(keyboard-inset-height, 0px) - 80px); /* Adjust for virtual keyboard height */
+        height: calc(100dvh - env(keyboard-inset-height, 0px) - 80px); /* Adjust for virtual keyboard height */
         border-radius: 0; /* Remove border radius for full-screen */
     }
 }
