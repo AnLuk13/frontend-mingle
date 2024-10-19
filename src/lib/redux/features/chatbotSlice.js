@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isOpen: true, // Initial state of the chatbot (closed)
+  isOpen: false, // Initial state of the chatbot (closed)
 };
 
 const chatbotSlice = createSlice({

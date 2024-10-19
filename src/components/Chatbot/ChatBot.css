@@ -11,40 +11,19 @@
     display: flex;
     flex-direction: column;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease-in-out;
 }
 
 @media (max-width: 750px) {
     .chatBox {
-        width: 100%;
-        height: calc(100vh - 80px); /* Full screen with 80px space from the top */
-        top: 80px; /* Set a top margin of 80px */
+        position: fixed;
         bottom: 0;
+        top: 80px;  /* Leave 80px from the top */
         right: 0;
         left: 0;
-        border-radius: 0;
-        box-shadow: none;
-    }
-
-    .chatInputBox {
         width: 100%;
-        position: absolute;
-        bottom: 0;
-    }
-
-    .chatContent {
-        height: calc(100vh - 140px); /* Adjust height when the keyboard opens/closes */
-        overflow-y: auto;
-    }
-
-    .chatInputBox input {
-        width: calc(100% - 60px); /* Take remaining space when keyboard opens */
-    }
-
-    .sendBtn {
-        width: 60px;
-        height: 50px;
-        border-radius: 0;
+        height: calc(100vh - env(keyboard-inset-height, 0px) - 80px); /* Adjust for virtual keyboard height */
+        border-radius: 0; /* Remove border radius for full-screen */
     }
 }
 
@@ -82,6 +61,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-bottom: env(keyboard-inset-height, 0px); /* Push content above virtual keyboard */
+    overscroll-behavior: contain;
 }
 
 .chatInputBox {

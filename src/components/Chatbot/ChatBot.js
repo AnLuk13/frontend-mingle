@@ -27,18 +27,41 @@ const ChatBot = () => {
   //   height: 0,
   // });
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 150 && chatBotState.isOpen) {
-        dispatch(toggleChatbot(false));
-      }
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 150 && chatBotState.isOpen) {
+  //       dispatch(toggleChatbot(false));
+  //     }
+  //   };
+  //
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [chatBotState.isOpen, dispatch]);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [chatBotState.isOpen, dispatch]);
+  useEffect(() => {
+    // Enable Virtual Keyboard overlay mode if supported
+    if ("virtualKeyboard" in navigator) {
+      navigator.virtualKeyboard.overlaysContent = true;
+
+      // Listen for changes in the virtual keyboard's geometry
+      navigator.virtualKeyboard.addEventListener("geometrychange", (event) => {
+        const { height } = event.target.boundingRect;
+        document.documentElement.style.setProperty(
+            "--keyboard-height",
+            `${height}px`
+        );
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const chatContent = document.querySelector(".chatContent");
+    if (chatContent) {
+      chatContent.scrollTop = chatContent.scrollHeight;
+    }
+  }, [messages]);
 
   const sendMessage = (message, id = null) => {
     setMessages((prev) => [...prev, { text: message, id }]); // Ensure every message has 'text' and optionally 'id'
