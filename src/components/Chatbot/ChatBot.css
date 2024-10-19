@@ -14,6 +14,40 @@
     transition: transform 0.3s ease;
 }
 
+@media (max-width: 750px) {
+    .chatBox {
+        width: 100%;
+        height: calc(100vh - 80px); /* Full screen with 80px space from the top */
+        top: 80px; /* Set a top margin of 80px */
+        bottom: 0;
+        right: 0;
+        left: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .chatInputBox {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+    }
+
+    .chatContent {
+        height: calc(100vh - 140px); /* Adjust height when the keyboard opens/closes */
+        overflow-y: auto;
+    }
+
+    .chatInputBox input {
+        width: calc(100% - 60px); /* Take remaining space when keyboard opens */
+    }
+
+    .sendBtn {
+        width: 60px;
+        height: 50px;
+        border-radius: 0;
+    }
+}
+
 .closeBtn {
     border-radius: 15px;
     display: flex;
