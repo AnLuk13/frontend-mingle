@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import "./ResetPassword.css";
-import { jwtDecode } from "jwt-decode";
 
 function ResetPassword() {
   const [userDetails, setUserDetails] = useState({

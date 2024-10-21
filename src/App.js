@@ -28,7 +28,6 @@ import {
 } from "./lib/redux/features/productsSlice";
 import ChatBot from "./components/Chatbot/ChatBot";
 import { setUser, setUserId } from "./lib/redux/features/userSlice";
-import { jwtDecode } from "jwt-decode";
 
 // Scroll to top on route change
 const ScrollToTop = () => {
