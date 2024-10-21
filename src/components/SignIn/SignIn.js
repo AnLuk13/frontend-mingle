@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SignIn.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserId } from "../../lib/redux/features/sliceSelectors";
 
 const SignIn = () => {
   const [error, setError] = useState("");
@@ -13,6 +14,13 @@ const SignIn = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userId = useSelector(selectUserId);
+
+  useEffect(() => {
+    if (userId) {
+      navigate("/");
+    }
+  }, [userId, navigate]);
 
   const handleOnchange = (e) => {
     setSignInDetails({

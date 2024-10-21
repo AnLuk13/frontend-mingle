@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import "./ResetPassword.css";
+import { selectUserId } from "../../lib/redux/features/sliceSelectors";
 
 function ResetPassword() {
   const [userDetails, setUserDetails] = useState({
@@ -14,6 +15,7 @@ function ResetPassword() {
   const [message, setMessage] = useState({ error: "", success: "" });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userId = useSelector(selectUserId);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,12 +89,14 @@ function ResetPassword() {
           </div>
         ))}
         <button className="reset-password-button">Reset Password</button>
-        <div className="small-txt-container">
-          <div className="small-txt">Already have an account?</div>
-          <Link className="forgot-btn" to="/sign-in">
-            Sign in
-          </Link>
-        </div>
+        {!userId && (
+          <div className="small-txt-container">
+            <div className="small-txt">Already have an account?</div>
+            <Link className="forgot-btn" to="/sign-in">
+              Sign in
+            </Link>
+          </div>
+        )}
       </form>
     </main>
   );

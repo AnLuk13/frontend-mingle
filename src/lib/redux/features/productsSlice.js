@@ -4,8 +4,9 @@ import axios from "axios";
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    console.log("API URL:", process.env.REACT_APP_API_URL);
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/products`,
+    );
     return response.data.data;
   },
 );

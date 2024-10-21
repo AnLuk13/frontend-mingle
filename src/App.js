@@ -45,8 +45,6 @@ const App = () => {
   const userId = useSelector(selectUserId);
   const productsDetails = useSelector(selectProductsDetails);
 
-  console.log(process.env.REACT_APP_API_URL);
-
   const handleAddToWishlist = async (item) => {
     try {
       if (!userId) {
