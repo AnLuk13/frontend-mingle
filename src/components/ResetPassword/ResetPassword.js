@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import "./ResetPassword.css";
+import jwtEncode from "jwt-encode";
 
 function ResetPassword() {
   const [userDetails, setUserDetails] = useState({
@@ -29,7 +30,6 @@ function ResetPassword() {
     }
 
     try {
-      // Step 1: Call reset-password endpoint
       const resetPasswordResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/auth/reset-password`,
         {
@@ -37,29 +37,23 @@ function ResetPassword() {
           newPassword: password,
         },
       );
-
-      // Step 2: Get the sessionId from the response
       const sessionId = resetPasswordResponse.data.sessionId;
-
-      // Step 3: Set the sessionId cookie manually
-      document.cookie = `sessionId=${sessionId}; path=/; max-age=${
+      const payload = {
+        userId: userId,
+        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // Token expiry in 1 day
+      };
+      const token = jwtEncode(payload, process.env.JWT_SECRET);
+      document.cookie = `sessionId=${token}; path=/; max-age=${
         24 * 60 * 60
       }; secure; samesite=None`;
-
-      // Step 4: Fetch the user details with the sessionId
       const userResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${sessionId}`,
       );
-
-      // Step 5: Dispatch actions to set the userId and user details in state
       dispatch(setUserId(sessionId));
       dispatch(setUser(userResponse.data));
-
-      // Step 6: Set a success message and navigate to the homepage
       setMessage({ error: "", success: "Password reset and login successful" });
       navigate("/");
     } catch (error) {
-      // Handle any errors during the reset process
       setMessage({
         error: "Error resetting password or logging in",
         success: "",

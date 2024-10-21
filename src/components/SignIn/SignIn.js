@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import { useDispatch } from "react-redux";
+import jwtEncode from "jwt-encode";
 
 const SignIn = () => {
   const [error, setError] = useState("");
@@ -28,7 +29,6 @@ const SignIn = () => {
       return;
     }
     try {
-      // Send login request to the backend
       const loginResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/auth/login`,
         {
@@ -37,28 +37,21 @@ const SignIn = () => {
         },
         { withCredentials: true },
       );
-
-      // Extract the sessionId from the response
       const userId = loginResponse.data.sessionId;
-
-      // Set the sessionId cookie manually
-      document.cookie = `sessionId=${userId}; path=/; max-age=${
+      const payload = {
+        userId: userId,
+        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // Token expiry in 1 day
+      };
+      const token = jwtEncode(payload, process.env.JWT_SECRET); // Use secret from env
+      document.cookie = `sessionId=${token}; path=/; max-age=${
         24 * 60 * 60
       }; secure; samesite=None`;
-
-      // Store userId in Redux or local state
       dispatch(setUserId(userId));
-
-      // Fetch user details using the userId
       const userResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${userId}`,
         { withCredentials: true },
       );
-
-      // Store user data in Redux or local state
       dispatch(setUser(userResponse.data));
-
-      // Redirect the user after successful login
       navigate("/");
     } catch (error) {
       setError("Login failed. Please check your credentials.");

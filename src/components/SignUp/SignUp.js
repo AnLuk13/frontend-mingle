@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserId } from "../../lib/redux/features/sliceSelectors";
+import jwtEncode from "jwt-encode";
 
 const SignUp = () => {
   const [error, setError] = useState("");
@@ -64,7 +65,12 @@ const SignUp = () => {
         },
       );
       const userId = loginResponse.data.sessionId;
-      document.cookie = `sessionId=${userId}; path=/; max-age=${
+      const payload = {
+        userId: userId,
+        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // Token expiry in 1 day
+      };
+      const token = jwtEncode(payload, process.env.JWT_SECRET); // Use secret from env
+      document.cookie = `sessionId=${token}; path=/; max-age=${
         24 * 60 * 60
       }; secure; samesite=None`;
       const userResponse = await axios.get(
