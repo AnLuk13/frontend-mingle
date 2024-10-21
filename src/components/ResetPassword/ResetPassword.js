@@ -39,7 +39,7 @@ function ResetPassword() {
       );
       const sessionId = resetPasswordResponse.data.sessionId;
       const payload = {
-        userId: userId,
+        userId: sessionId,
         exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // Token expiry in 1 day
       };
       const token = jwtEncode(payload, process.env.JWT_SECRET);
