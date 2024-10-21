@@ -36,10 +36,9 @@ function ResetPassword() {
         `${process.env.REACT_APP_API_URL}/auth/login`,
         { email, password },
       );
-      const decoded = jwtDecode(loginResponse.data.token).id;
-      dispatch(setUserId(decoded));
+      dispatch(setUserId(loginResponse.data.sessionId));
       const userResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/users/${decoded}`,
+        `${process.env.REACT_APP_API_URL}/users/${loginResponse.data.sessionId}`,
       );
       dispatch(setUser(userResponse.data));
       setMessage({ error: "", success: "Password reset and login successful" });

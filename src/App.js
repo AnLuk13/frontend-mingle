@@ -28,6 +28,7 @@ import {
 } from "./lib/redux/features/productsSlice";
 import ChatBot from "./components/Chatbot/ChatBot";
 import { setUser, setUserId } from "./lib/redux/features/userSlice";
+import { jwtDecode } from "jwt-decode";
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -84,38 +85,33 @@ const App = () => {
   };
 
   useEffect(() => {
-    const getUserFromToken = async () => {
-      try {
-        // Make the request to the backend to validate the session and retrieve user info
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/auth/session`,
-          {
-            withCredentials: true, // Ensures the cookie is sent along with the request
-          },
-        );
-
-        // Extract user data from the response
-        const decodedUserId = response.data.userId;
+    const getSessionIdFromCookies = async () => {
+      const cookies = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("sessionId="));
+      if (cookies) {
+        const sessionId = cookies.split("=")[1];
         if (!userId) {
-          dispatch(setUserId(decodedUserId));
+          dispatch(setUserId(sessionId));
         }
-
-        const userResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/users/${decodedUserId}`,
-          {
-            withCredentials: true,
-          },
-        );
-        const user = userResponse.data;
-        if (user && user.wishlist) {
-          dispatch(setUser(user));
-          dispatch(setWishlist(user.wishlist));
+        try {
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/users/${sessionId}`,
+            {
+              withCredentials: true,
+            },
+          );
+          const user = response.data;
+          if (user && user.wishlist) {
+            dispatch(setUser(user));
+            dispatch(setWishlist(user.wishlist)); // Dispatch action to set the initial wishlist
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error.message);
         }
-      } catch (error) {
-        console.error("Error fetching user:", error.message);
       }
     };
-    getUserFromToken();
+    getSessionIdFromCookies();
   }, [userId, dispatch]);
 
   useEffect(() => {

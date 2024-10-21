@@ -65,7 +65,7 @@ const SignUp = () => {
         },
         { withCredentials: true },
       );
-      const userId = jwtDecode(loginResponse.data.token).id;
+      const userId = loginResponse.data.sessionId;
       dispatch(setUserId(userId));
       const userResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${userId}`,
