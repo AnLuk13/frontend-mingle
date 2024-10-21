@@ -109,6 +109,7 @@
     height: 48px;
     background: var(--background);
     border: none;
+    font-size: 16px;
 }
 
 .inputCustom:hover, .inputCustom:focus, .inputCustom:active {

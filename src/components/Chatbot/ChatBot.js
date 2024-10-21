@@ -22,6 +22,19 @@ const ChatBot = () => {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
+    if (chatBotState.isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    // Clean up the effect when the component unmounts or when chatbot is closed
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [chatBotState.isOpen]);
+
+  useEffect(() => {
     if (chatBotState.isOpen && chatContentRef.current) {
       chatContentRef.current.scrollTop = chatBotState.scrollPosition;
     }

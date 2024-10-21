@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 const SignIn = () => {
   const [error, setError] = useState("");
@@ -36,7 +37,7 @@ const SignIn = () => {
         },
         { withCredentials: true },
       );
-      const userId = loginResponse.data.sessionId;
+      const userId = jwtDecode(loginResponse.data.token).id;
       dispatch(setUserId(userId));
       const userResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${userId}`,

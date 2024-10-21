@@ -1,6 +1,6 @@
 import "./App.css";
 import "@google/model-viewer/dist/model-viewer.min.js";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, useLocation } from "react-router-dom";
 import ProductList from "./components/ProductList/ProductList";
 import About from "./components/About/About";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
@@ -28,6 +28,18 @@ import {
 } from "./lib/redux/features/productsSlice";
 import ChatBot from "./components/Chatbot/ChatBot";
 import { setUser, setUserId } from "./lib/redux/features/userSlice";
+import { jwtDecode } from "jwt-decode";
+
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 const App = () => {
   const dispatch = useDispatch();
@@ -73,18 +85,20 @@ const App = () => {
   };
 
   useEffect(() => {
-    const getSessionIdFromCookies = async () => {
-      const cookies = document.cookie
+    const getUserFromToken = async () => {
+      const tokenCookie = document.cookie
         .split("; ")
-        .find((row) => row.startsWith("sessionId="));
-      if (cookies) {
-        const sessionId = cookies.split("=")[1];
+        .find((row) => row.startsWith("token="));
+      if (tokenCookie) {
+        const token = tokenCookie.split("=")[1];
+        const decodedToken = jwtDecode(token);
+        const decodedUserId = decodedToken.id;
         if (!userId) {
-          dispatch(setUserId(sessionId));
+          dispatch(setUserId(decodedUserId));
         }
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/users/${sessionId}`,
+            `${process.env.REACT_APP_API_URL}/users/${decodedUserId}`,
             {
               withCredentials: true,
             },
@@ -92,17 +106,15 @@ const App = () => {
           const user = response.data;
           if (user && user.wishlist) {
             dispatch(setUser(user));
-            dispatch(setWishlist(user.wishlist)); // Dispatch action to set the initial wishlist
+            dispatch(setWishlist(user.wishlist));
           }
         } catch (error) {
           console.error("Error fetching user:", error.message);
         }
       }
     };
-    getSessionIdFromCookies();
+    getUserFromToken();
   }, [userId, dispatch]);
-
-  console.log(userId);
 
   useEffect(() => {
     if (productsDetails?.status === "idle") {
@@ -113,6 +125,7 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         <Header />
         <Routes>
           <Route

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import "./ResetPassword.css";
+import { jwtDecode } from "jwt-decode";
 
 function ResetPassword() {
   const [userDetails, setUserDetails] = useState({
@@ -35,9 +36,10 @@ function ResetPassword() {
         `${process.env.REACT_APP_API_URL}/auth/login`,
         { email, password },
       );
-      dispatch(setUserId(loginResponse.data.sessionId));
+      const decoded = jwtDecode(loginResponse.data.token).id;
+      dispatch(setUserId(decoded));
       const userResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/users/${loginResponse.data.sessionId}`,
+        `${process.env.REACT_APP_API_URL}/users/${decoded}`,
       );
       dispatch(setUser(userResponse.data));
       setMessage({ error: "", success: "Password reset and login successful" });
@@ -59,10 +61,10 @@ function ResetPassword() {
         {message.error && (
           <p className="error-paragraph">Error: {message.error}</p>
         )}
-        {["email", "new password", "confirm_password"].map((field, idx) => (
+        {["email", "password", "confirm_password"].map((field, idx) => (
           <div key={idx} className="input-div">
             <label className="input-label" htmlFor={field}>
-              {field.replace("_", " ")}
+              {field.replace("_", " ").toUpperCase()}
             </label>
             <input
               className="inputCustom"
@@ -71,6 +73,13 @@ function ResetPassword() {
               type={field === "email" ? "email" : "password"}
               onChange={handleChange}
               value={userDetails[field]}
+              placeholder={
+                field === "email"
+                  ? "Enter email"
+                  : field === "password"
+                    ? "Enter new password"
+                    : "Confirm password"
+              }
             />
           </div>
         ))}
