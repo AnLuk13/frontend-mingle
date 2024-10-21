@@ -86,33 +86,34 @@ const App = () => {
 
   useEffect(() => {
     const getUserFromToken = async () => {
-      const tokenCookie = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("token="));
-      console.log(tokenCookie);
-      if (tokenCookie) {
-        const token = tokenCookie.split("=")[1];
-        console.log(token);
-        const decodedToken = jwtDecode(token);
-        const decodedUserId = decodedToken.id;
+      try {
+        // Make the request to the backend to validate the session and retrieve user info
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/auth/session`,
+          {
+            withCredentials: true, // Ensures the cookie is sent along with the request
+          },
+        );
+
+        // Extract user data from the response
+        const decodedUserId = response.data.userId;
         if (!userId) {
           dispatch(setUserId(decodedUserId));
         }
-        try {
-          const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/users/${decodedUserId}`,
-            {
-              withCredentials: true,
-            },
-          );
-          const user = response.data;
-          if (user && user.wishlist) {
-            dispatch(setUser(user));
-            dispatch(setWishlist(user.wishlist));
-          }
-        } catch (error) {
-          console.error("Error fetching user:", error.message);
+
+        const userResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/users/${decodedUserId}`,
+          {
+            withCredentials: true,
+          },
+        );
+        const user = userResponse.data;
+        if (user && user.wishlist) {
+          dispatch(setUser(user));
+          dispatch(setWishlist(user.wishlist));
         }
+      } catch (error) {
+        console.error("Error fetching user:", error.message);
       }
     };
     getUserFromToken();
