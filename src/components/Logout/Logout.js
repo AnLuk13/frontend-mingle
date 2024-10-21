@@ -20,6 +20,7 @@ function Logout() {
         { withCredentials: true },
       );
       console.log(response.data.message);
+      document.cookie = "sessionId=; path=/; max-age=0; secure; samesite=None";
       dispatch(clearUserId());
     } catch (error) {
       console.error(

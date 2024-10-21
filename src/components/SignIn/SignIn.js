@@ -28,6 +28,7 @@ const SignIn = () => {
       return;
     }
     try {
+      // Send login request to the backend
       const loginResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/auth/login`,
         {
@@ -36,13 +37,28 @@ const SignIn = () => {
         },
         { withCredentials: true },
       );
+
+      // Extract the sessionId from the response
       const userId = loginResponse.data.sessionId;
+
+      // Set the sessionId cookie manually
+      document.cookie = `sessionId=${userId}; path=/; max-age=${
+        24 * 60 * 60
+      }; secure; samesite=None`;
+
+      // Store userId in Redux or local state
       dispatch(setUserId(userId));
+
+      // Fetch user details using the userId
       const userResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${userId}`,
         { withCredentials: true },
       );
+
+      // Store user data in Redux or local state
       dispatch(setUser(userResponse.data));
+
+      // Redirect the user after successful login
       navigate("/");
     } catch (error) {
       setError("Login failed. Please check your credentials.");

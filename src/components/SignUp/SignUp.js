@@ -59,17 +59,19 @@ const SignUp = () => {
       const loginResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/auth/login`,
         {
-          email: signupResponse.data.email, // Use email from the signup response
-          password: userDetails.password, // Use the same password user provided for signup
+          email: signupResponse.data.email, // Use email from signup response
+          password: userDetails.password, // Use same password
         },
-        { withCredentials: true },
       );
       const userId = loginResponse.data.sessionId;
-      dispatch(setUserId(userId));
+      document.cookie = `sessionId=${userId}; path=/; max-age=${
+        24 * 60 * 60
+      }; secure; samesite=None`;
       const userResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/users/${userId}`,
         { withCredentials: true },
       );
+      dispatch(setUserId(userId));
       dispatch(setUser(userResponse.data));
       setError("");
       setUserDetails({
