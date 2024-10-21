@@ -29,6 +29,7 @@ import {
 import ChatBot from "./components/Chatbot/ChatBot";
 import { setUser, setUserId } from "./lib/redux/features/userSlice";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -86,34 +87,29 @@ const App = () => {
 
   useEffect(() => {
     const getUserFromToken = async () => {
-      try {
-        // Make the request to the backend to validate the session and retrieve user info
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/auth/session`,
-          {
-            withCredentials: true, // Ensures the cookie is sent along with the request
-          },
-        );
+      const token = Cookies.get("token");
+      console.log(token); // Get the token from cookies
+      if (token) {
+        try {
+          const decodedUserId = jwtDecode(token).id; // Decode the token if necessary
+          if (!userId) {
+            dispatch(setUserId(decodedUserId));
+          }
 
-        // Extract user data from the response
-        const decodedUserId = response.data.userId;
-        if (!userId) {
-          dispatch(setUserId(decodedUserId));
+          const userResponse = await axios.get(
+            `${process.env.REACT_APP_API_URL}/users/${decodedUserId}`,
+            {
+              withCredentials: true, // Ensures the cookie is sent along with the request
+            },
+          );
+          const user = userResponse.data;
+          if (user && user.wishlist) {
+            dispatch(setUser(user));
+            dispatch(setWishlist(user.wishlist));
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error.message);
         }
-
-        const userResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/users/${decodedUserId}`,
-          {
-            withCredentials: true,
-          },
-        );
-        const user = userResponse.data;
-        if (user && user.wishlist) {
-          dispatch(setUser(user));
-          dispatch(setWishlist(user.wishlist));
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error.message);
       }
     };
     getUserFromToken();

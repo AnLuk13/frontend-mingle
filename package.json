@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^14.4.3",
     "axios": "^1.7.7",
     "caniuse-lite": "^1.0.30001664",
+    "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lodash.debounce": "^4.0.8",
     "qrcode.react": "^3.1.0",
