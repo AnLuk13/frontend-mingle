@@ -85,6 +85,8 @@ const App = () => {
   };
 
   useEffect(() => {
+    let previousCookie = document.cookie;
+
     const getUserFromToken = async () => {
       const tokenCookie = document.cookie
         .split("; ")
@@ -113,7 +115,22 @@ const App = () => {
         }
       }
     };
-    getUserFromToken();
+
+    const checkCookieChange = () => {
+      const currentCookie = document.cookie;
+      if (currentCookie !== previousCookie) {
+        previousCookie = currentCookie;
+        getUserFromToken(); // Run your logic when the cookies change
+      }
+    };
+
+    // Set interval to monitor cookies every second
+    const intervalId = setInterval(checkCookieChange, 1000);
+
+    // Cleanup on component unmount
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [userId, dispatch]);
 
   useEffect(() => {
