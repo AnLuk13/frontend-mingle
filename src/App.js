@@ -28,7 +28,6 @@ import {
 } from "./lib/redux/features/productsSlice";
 import ChatBot from "./components/Chatbot/ChatBot";
 import { setUser, setUserId } from "./lib/redux/features/userSlice";
-import { jwtDecode } from "jwt-decode";
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -91,13 +90,12 @@ const App = () => {
         .find((row) => row.startsWith("sessionId="));
       if (cookies) {
         const sessionId = cookies.split("=")[1];
-        const decoded = jwtDecode(sessionId);
         if (!userId) {
-          dispatch(setUserId(decoded.userId));
+          dispatch(setUserId(sessionId));
         }
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/users/${decoded.userId}`,
+            `${process.env.REACT_APP_API_URL}/users/${sessionId}`,
             {
               withCredentials: true,
             },

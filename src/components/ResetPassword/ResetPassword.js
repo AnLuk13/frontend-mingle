@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import "./ResetPassword.css";
-import jwtEncode from "jwt-encode";
 
 function ResetPassword() {
   const [userDetails, setUserDetails] = useState({
@@ -38,12 +37,7 @@ function ResetPassword() {
         },
       );
       const sessionId = resetPasswordResponse.data.sessionId;
-      const payload = {
-        userId: sessionId,
-        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // Token expiry in 1 day
-      };
-      const token = jwtEncode(payload, process.env.JWT_SECRET);
-      document.cookie = `sessionId=${token}; path=/; max-age=${
+      document.cookie = `sessionId=${sessionId}; path=/; max-age=${
         24 * 60 * 60
       }; secure; samesite=None`;
       const userResponse = await axios.get(
