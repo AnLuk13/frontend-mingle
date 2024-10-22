@@ -53,7 +53,7 @@ const App = () => {
     try {
       if (!userId) {
         console.error("User not authenticated");
-        window.location.href = "/login";
+        window.location.href = "/sign-in";
         return;
       }
 
@@ -85,7 +85,7 @@ const App = () => {
       }
     } catch (error) {
       console.error("Error updating wishlist", error.message);
-      window.location.href = "/login";
+      window.location.href = "/sign-in";
     }
   };
   useEffect(() => {
