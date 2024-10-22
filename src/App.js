@@ -14,7 +14,10 @@ import { useEffect } from "react";
 import Logout from "./components/Logout/Logout";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserId } from "./lib/redux/features/sliceSelectors";
+import {
+  selectUserId,
+  selectWishlist,
+} from "./lib/redux/features/sliceSelectors";
 import {
   setWishlist,
   addToWishlist,
@@ -42,45 +45,49 @@ const ScrollToTop = () => {
 
 const App = () => {
   const dispatch = useDispatch();
+  const wishlist = useSelector(selectWishlist);
   const userId = useSelector(selectUserId);
   const productsDetails = useSelector(selectProductsDetails);
 
-  const handleAddToWishlist = async (item) => {
+  const handleWishlistToggle = async (item) => {
     try {
       if (!userId) {
         console.error("User not authenticated");
+        window.location.href = "/login";
         return;
       }
-      dispatch(addToWishlist(item));
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
-        {
-          productId: item._id,
-        },
+
+      // Check if the item is already in the wishlist
+      const isInWishlist = wishlist.some(
+        (wishlistItem) => wishlistItem._id === item._id,
       );
+
+      if (isInWishlist) {
+        // Remove from wishlist
+        dispatch(removeFromWishlist(item._id)); // Dispatch Redux action to remove
+        await axios.put(
+          `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
+          {
+            productId: item._id,
+            action: "remove",
+          },
+        );
+      } else {
+        // Add to wishlist
+        dispatch(addToWishlist(item)); // Dispatch Redux action to add
+        await axios.put(
+          `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
+          {
+            productId: item._id,
+            action: "add",
+          },
+        );
+      }
     } catch (error) {
+      console.error("Error updating wishlist", error.message);
       window.location.href = "/login";
     }
   };
-
-  const handleRemoveItem = async (id) => {
-    try {
-      if (!userId) {
-        console.error("User not authenticated");
-        return;
-      }
-      dispatch(removeFromWishlist(id)); // Use Redux to remove from wishlist
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
-        {
-          productId: id,
-        },
-      );
-    } catch (error) {
-      console.error("Error removing product from wishlist", error.message);
-    }
-  };
-
   useEffect(() => {
     const getSessionIdFromCookies = async () => {
       const cookies = document.cookie
@@ -126,26 +133,20 @@ const App = () => {
           <Route
             path="/"
             element={
-              <ProductList
-                addToWishlist={handleAddToWishlist}
-                removeFromWishlist={handleRemoveItem}
-              />
+              <ProductList handleWishlistToggle={handleWishlistToggle} />
             }
           />
           <Route
             path="/products/:id"
             element={
-              <ProductItem
-                addToWishlist={handleAddToWishlist}
-                removeFromWishlist={handleRemoveItem}
-              />
+              <ProductItem handleWishlistToggle={handleWishlistToggle} />
             }
           ></Route>
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route
             path="/wishlist"
-            element={<WishList onRemoveItem={handleRemoveItem} />}
+            element={<WishList onRemoveItem={handleWishlistToggle} />}
           />
           <Route path="/about" element={<About />} />
           <Route path="/feedback" element={<Feedback />} />

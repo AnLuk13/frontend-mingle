@@ -7,12 +7,7 @@ import Select from "react-select";
 import { customSelectStylesModelViewer } from "../../lib/consts/selectCustomStyles";
 import { Link } from "react-router-dom";
 
-const ModelViewer = ({
-  item,
-  addToWishlist,
-  removeFromWishlist,
-  setQrModalItem,
-}) => {
+const ModelViewer = ({ item, handleWishlistToggle, setQrModalItem }) => {
   const [display, setDisplay] = useState(false);
   const [ARSupported, setARSupported] = useState(false);
   const [annotate, setAnnotate] = useState(false);
@@ -98,14 +93,6 @@ const ModelViewer = ({
       setIsInWishlist(isInWishlist);
     }
   }, [item, wishlist]);
-
-  const handleAddToWishlist = () => {
-    if (isInWishlist) {
-      removeFromWishlist(item._id);
-    } else {
-      addToWishlist(item);
-    }
-  };
 
   const handleShowQR = () => {
     setQrModalItem(item);
@@ -223,7 +210,10 @@ const ModelViewer = ({
                   Show QR
                 </button>
               )}
-              <button className="add-icon" onClick={handleAddToWishlist}>
+              <button
+                className="add-icon"
+                onClick={() => handleWishlistToggle(item)}
+              >
                 <div style={{ fontSize: 35, boxSizing: "border-box" }}>
                   {isInWishlist ? "-" : "+"}
                 </div>

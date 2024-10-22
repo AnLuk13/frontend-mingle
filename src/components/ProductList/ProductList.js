@@ -12,7 +12,7 @@ import Select from "react-select";
 import { sortOptions } from "../../lib/consts/consts";
 import { customSelectStyles } from "../../lib/consts/selectCustomStyles";
 
-const ProductList = ({ addToWishlist, removeFromWishlist }) => {
+const ProductList = ({ handleWishlistToggle }) => {
   const productsDetails = useSelector(selectProductsDetails);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -133,8 +133,7 @@ const ProductList = ({ addToWishlist, removeFromWishlist }) => {
           <LazyLoad key={idx}>
             <ModelViewer
               item={item}
-              addToWishlist={addToWishlist}
-              removeFromWishlist={removeFromWishlist}
+              handleWishlistToggle={handleWishlistToggle}
               setQrModalItem={setQrModalItem}
             />
           </LazyLoad>
@@ -146,11 +145,7 @@ const ProductList = ({ addToWishlist, removeFromWishlist }) => {
             <h3>QR Code for {qrModalItem.name}</h3>
             <QRCode
               id={qrModalItem.name}
-              value={
-                isIOS
-                  ? `${window.location.origin}${qrModalItem.iOSSrc}`
-                  : `${window.location.origin}${qrModalItem.modelSrc}#ar`
-              }
+              value={`${process.env.REACT_APP_BASE_URL}/products/${qrModalItem._id}`}
               size={300}
               bgColor="#ffffff"
               fgColor="#000000"

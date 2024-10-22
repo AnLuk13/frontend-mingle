@@ -6,9 +6,9 @@ import { isIOS } from "react-device-detect";
 import CloseBtn from "../Icons/CloseBtn";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import {MoonLoader} from "react-spinners";
+import { MoonLoader } from "react-spinners";
 
-const ProductItem = ({ addToWishlist, removeFromWishlist }) => {
+const ProductItem = ({ handleWishlistToggle }) => {
   const { id } = useParams();
   const [qrModalItem, setQrModalItem] = useState(null);
   const [item, setItem] = useState(null);
@@ -32,25 +32,24 @@ const ProductItem = ({ addToWishlist, removeFromWishlist }) => {
   }, [id]);
 
   if (loading) {
-    return <div className={"responseScreen"}>
-      <MoonLoader color={"black"} size={60}/>
-    </div>;
+    return (
+      <div className={"responseScreen"}>
+        <MoonLoader color={"black"} size={60} />
+      </div>
+    );
   }
 
   if (!item) {
-    return <div className={"responseScreen"}>
-      Product not found!
-    </div>;
+    return <div className={"responseScreen"}>Product not found!</div>;
   }
 
   return (
-      <div className="productItemContainer">
-        <div className={"productItem-title"}>{item.name}</div>
+    <div className="productItemContainer">
+      <div className={"productItem-title"}>{item.name}</div>
       <div className={"modelViewerInfoBox"}>
         <ModelViewer
           item={item}
-          addToWishlist={addToWishlist}
-          removeFromWishlist={removeFromWishlist}
+          handleWishlistToggle={handleWishlistToggle}
           setQrModalItem={setQrModalItem}
         />
 
@@ -68,11 +67,7 @@ const ProductItem = ({ addToWishlist, removeFromWishlist }) => {
             <h3>QR Code for {qrModalItem.name}</h3>
             <QRCode
               id={qrModalItem.name}
-              value={
-                isIOS
-                  ? `${window.location.origin}${qrModalItem.iOSSrc}`
-                  : `${window.location.origin}${qrModalItem.modelSrc}#ar`
-              }
+              value={`${process.env.REACT_APP_BASE_URL}/products/${qrModalItem._id}`}
               size={300}
               bgColor="#ffffff"
               fgColor="#000000"
