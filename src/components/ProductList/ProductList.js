@@ -7,7 +7,6 @@ import LazyLoad from "react-lazyload";
 import { MoonLoader } from "react-spinners";
 import QRCode from "qrcode.react";
 import CloseBtn from "../Icons/CloseBtn";
-import { isIOS } from "react-device-detect";
 import Select from "react-select";
 import { sortOptions } from "../../lib/consts/consts";
 import { customSelectStyles } from "../../lib/consts/selectCustomStyles";

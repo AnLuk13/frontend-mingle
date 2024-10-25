@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ModelViewer from "../ModelViewer/ModelViewer"; // Assuming ModelViewer is in the same folder
 import "./ProductItem.css";
 import QRCode from "qrcode.react";
-import { isIOS } from "react-device-detect";
 import CloseBtn from "../Icons/CloseBtn";
 import { useParams } from "react-router-dom";
 import axios from "axios";

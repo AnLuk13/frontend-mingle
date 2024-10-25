@@ -1,7 +1,5 @@
 import "./About.css";
 import React, { useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 const About = () => {
   useEffect(() => {
@@ -55,7 +53,7 @@ const About = () => {
       <div>test</div>
       {showScrollUpButton && (
         <button className="scroll-up-button" onClick={scrollToTop}>
-          <FontAwesomeIcon icon={faArrowUp} />
+          AAA
         </button>
       )}
     </div>
