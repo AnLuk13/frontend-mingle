@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./ChatBot.css";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProductsDetails } from "../../lib/redux/features/productsSlice";
 import {
   toggleChatbot,
   addMessage,
@@ -12,25 +11,28 @@ import { Link } from "react-router-dom";
 import ChatBotIcon from "../Icons/ChatbotIcon";
 import CloseBtn from "../Icons/CloseBtn";
 import SendBtnIcon from "../Icons/SendBtnIcon";
+import axios from "axios";
 
 const ChatBot = () => {
-  const products = useSelector(selectProductsDetails);
   const chatBotState = useSelector(selectChatBotState);
   const dispatch = useDispatch();
   const chatContentRef = useRef(null);
   const [input, setInput] = useState("");
-  const [category, setCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Noua stare de încărcare
 
   useEffect(() => {
-    if (chatBotState.isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    // Clean up the effect when the component unmounts or when chatbot is closed
+    const handleResize = () => {
+      if (chatBotState.isOpen && window.innerWidth < 750) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
+    };
+    handleResize(); // Verifică lățimea imediat ce componenta se încarcă sau se deschide chat-ul
+    window.addEventListener("resize", handleResize); // Adaugă un listener pentru redimensionare
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto"; // Asigură overflow-ul corect la demontare
+      window.removeEventListener("resize", handleResize); // Elimină listener-ul la demontare
     };
   }, [chatBotState.isOpen]);
 
@@ -54,77 +56,46 @@ const ChatBot = () => {
     setInput(e.target.value);
   };
 
-  const sliceDescription = (desc) => {
-    if (desc.length > 25) {
-      return `${desc.slice(0, 25)}...`;
-    } else return desc;
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
+
     sendMessage(`You: ${input}`);
-    processUserInput(input);
     setInput("");
+    setIsLoading(true); // Activează mesajul "Loading..." când începe solicitarea
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/openAI`,
+        { message: input },
+      );
+      const { data } = response;
+
+      setIsLoading(false); // Dezactivează mesajul "Loading..." la primirea răspunsului
+
+      if (data.message) {
+        sendMessage(data.message);
+      } else if (Array.isArray(data) && data.length > 0) {
+        data.forEach((item) => {
+          sendMessage(
+            `- ${item.name}: ${sliceDescription(item.description)}. Price: $${
+              item.price
+            }. In stock: ${item.stock}`,
+            item._id,
+          );
+        });
+      } else {
+        sendMessage("No matching products found.");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setIsLoading(false); // Dezactivează mesajul "Loading..." în caz de eroare
+      sendMessage("An error occurred. Please try again.");
+    }
   };
 
-  const processUserInput = (input) => {
-    // Extract category if present (e.g., Furniture, Art, Outdoor Furniture)
-    const categoryMatch = input.match(
-      /(furniture|art|home decor|outdoor furniture|environment)/i,
-    );
-
-    // Extract dimensions (e.g., 5 4 3 or 5x4x3)
-    const dimensionMatch = input.match(
-      /(\d+\.?\d*)\s*x?\s*(\d+\.?\d*)\s*x?\s*(\d+\.?\d*)?/i,
-    );
-
-    if (categoryMatch) {
-      setCategory(categoryMatch[0].toLowerCase());
-    }
-
-    if (dimensionMatch) {
-      const length = parseFloat(dimensionMatch[1]) || 0;
-      const width = parseFloat(dimensionMatch[2]) || 0;
-      const height = parseFloat(dimensionMatch[3]) || 0;
-      filterProducts(categoryMatch ? categoryMatch[0] : category, {
-        length,
-        width,
-        height,
-      });
-    } else if (categoryMatch) {
-      filterProducts(categoryMatch[0], { length: 0, width: 0, height: 0 });
-    } else {
-      sendMessage("Please specify a valid category or dimensions.");
-    }
-  };
-
-  const filterProducts = (category, dimensions) => {
-    const filteredProducts = products.items.filter((product) => {
-      const productDimensions = product.dimensions || {};
-
-      const matchesCategory =
-        !category || product.category.toLowerCase() === category.toLowerCase();
-      const matchesDimensions =
-        (!dimensions.length || productDimensions.length <= dimensions.length) &&
-        (!dimensions.width || productDimensions.width <= dimensions.width) &&
-        (!dimensions.height || productDimensions.height <= dimensions.height);
-
-      return matchesCategory && matchesDimensions;
-    });
-
-    if (filteredProducts.length > 0) {
-      filteredProducts.forEach((item) => {
-        sendMessage(
-          `- ${item.name}: ${sliceDescription(item.description)}. Price: $${
-            item.price
-          }. In stock: ${item.stock}`,
-          item._id, // Pass product ID along with the message
-        );
-      });
-    } else {
-      sendMessage("No matching products found.");
-    }
+  const sliceDescription = (desc) => {
+    return desc.length > 25 ? `${desc.slice(0, 25)}...` : desc;
   };
 
   return (
@@ -156,7 +127,7 @@ const ChatBot = () => {
               >
                 {msg.id ? (
                   <Link
-                    className={"assistantMessageLink"}
+                    className="assistantMessageLink"
                     to={`/products/${msg.id}`}
                     onClick={() => dispatch(toggleChatbot())}
                   >
@@ -167,6 +138,9 @@ const ChatBot = () => {
                 )}
               </div>
             ))}
+            {isLoading && (
+              <div className="chatMessage assistantMessage">Loading...</div>
+            )}
           </div>
           <div className="chatInputBox">
             <form
@@ -174,14 +148,14 @@ const ChatBot = () => {
               style={{ display: "flex", width: "100%" }}
             >
               <input
-                className={"chatInput"}
+                className="chatInput"
                 type="text"
                 value={input}
                 onChange={handleInputChange}
                 placeholder="Type a message..."
                 style={{ width: "80%" }}
               />
-              <button className={"sendBtn"} type="submit">
+              <button className="sendBtn" type="submit">
                 <SendBtnIcon />
               </button>
             </form>

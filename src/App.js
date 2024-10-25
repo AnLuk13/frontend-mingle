@@ -88,6 +88,7 @@ const App = () => {
       window.location.href = "/sign-in";
     }
   };
+
   useEffect(() => {
     const getSessionIdFromCookies = async () => {
       const cookies = document.cookie
