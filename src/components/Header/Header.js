@@ -27,7 +27,7 @@ const Header = () => {
   const navigationLinks = [
     { label: "Collection", Path: "/" },
     { label: "About", Path: "/about" },
-    { label: "Feedback", Path: "/feedback" },
+    { label: "Help", Path: "/help" },
     { label: "Cart", Path: "/wishlist" },
     { label: "Login", Path: "/sign-in" },
   ];
@@ -35,7 +35,7 @@ const Header = () => {
   const navigationLinksLoggedIn = [
     { label: "Collection", Path: "/" },
     { label: "About", Path: "/about" },
-    { label: "Feedback", Path: "/feedback" },
+    { label: "Help", Path: "/help" },
     { label: "Cart", Path: "/wishlist" },
   ];
 

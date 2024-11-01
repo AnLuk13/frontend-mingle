@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./WishList.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -8,11 +8,14 @@ import {
 } from "../../lib/redux/features/sliceSelectors";
 import LazyLoad from "react-lazyload";
 import ModelViewer from "../ModelViewer/ModelViewer";
+import QRCode from "qrcode.react";
+import CloseBtn from "../Icons/CloseBtn";
 
-const WishList = ({ onRemoveItem }) => {
+const WishList = ({ handleWishlistToggle }) => {
   const userId = useSelector(selectUserId);
   const wishlist = useSelector(selectWishlist);
   const isEmpty = wishlist.length === 0;
+  const [qrModalItem, setQrModalItem] = useState(null);
 
   const EmptyCart = () => {
     return (
@@ -37,12 +40,34 @@ const WishList = ({ onRemoveItem }) => {
           {wishlist.map((item, idx) => (
             <LazyLoad key={idx}>
               <ModelViewer
+                setQrModalItem={setQrModalItem}
                 item={item}
-                addToWishlist={() => {}}
-                removeFromWishlist={onRemoveItem}
+                handleWishlistToggle={handleWishlistToggle}
               />
             </LazyLoad>
           ))}
+          {qrModalItem && (
+            <div className="modal-overlay" onClick={() => setQrModalItem(null)}>
+              <div className="modal" onClick={(e) => e.stopPropagation()}>
+                <h3>QR Code for {qrModalItem.name}</h3>
+                <QRCode
+                  id={qrModalItem.name}
+                  value={`${process.env.REACT_APP_BASE_URL}/products/${qrModalItem._id}`}
+                  size={300}
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                  level="H"
+                  includeMargin
+                />
+                <button
+                  className="close-btn"
+                  onClick={() => setQrModalItem(null)}
+                >
+                  <CloseBtn />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </>
     );
@@ -50,7 +75,7 @@ const WishList = ({ onRemoveItem }) => {
 
   return (
     <div style={{ marginTop: 80 }}>
-      <div className="container">
+      <div className="cart-container">
         <div className="cart-items-container">
           {userId == null ? (
             <>

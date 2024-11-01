@@ -5,6 +5,10 @@
   --font-family: "Inter", sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .arbutton {
   display: flex;
   align-items: center;
@@ -253,6 +257,7 @@
   position: relative;
   border-radius: 18px;
   padding-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .fullscreen-mob {

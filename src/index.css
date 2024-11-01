@@ -1,16 +1,7 @@
-/* Colors */
-
 html{
   scroll-behavior: smooth;
 }
 
-
-:root {
-  --primary-color: #3498db;
-  --background-color: #fff;
-}
-
-/* Reset and General Styles */
 body {
   margin: 0 !important;
   padding: 0 !important;
@@ -45,9 +36,4 @@ textarea {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Code Styling */
-code {
-  color: var(--primary-color);
 }

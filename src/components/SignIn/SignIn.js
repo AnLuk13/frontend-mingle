@@ -5,6 +5,7 @@ import axios from "axios";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserId } from "../../lib/redux/features/sliceSelectors";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const [error, setError] = useState("");
@@ -54,9 +55,11 @@ const SignIn = () => {
         { withCredentials: true },
       );
       dispatch(setUser(userResponse.data));
+      toast.success(`Signed in successfully!`);
       navigate("/");
     } catch (error) {
       setError("Login failed. Please check your credentials.");
+      toast.error(`Error signing in!`);
     }
   };
 

@@ -49,7 +49,7 @@ const About = () => {
   };
 
   return (
-    <div className="container">
+    <div className="about-container">
       <div>test</div>
       {showScrollUpButton && (
         <button className="scroll-up-button" onClick={scrollToTop}>

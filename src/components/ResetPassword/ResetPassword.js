@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser, setUserId } from "../../lib/redux/features/userSlice";
 import "./ResetPassword.css";
 import { selectUserId } from "../../lib/redux/features/sliceSelectors";
+import { toast } from "react-toastify";
 
 function ResetPassword() {
   const [userDetails, setUserDetails] = useState({
@@ -49,11 +50,13 @@ function ResetPassword() {
       dispatch(setUser(userResponse.data));
       setMessage({ error: "", success: "Password reset and login successful" });
       navigate("/");
+      toast.success(`Password changed successfully!`);
     } catch (error) {
       setMessage({
         error: "Error resetting password or logging in",
         success: "",
       });
+      toast.error(`Error changing password!`);
     }
   };
 

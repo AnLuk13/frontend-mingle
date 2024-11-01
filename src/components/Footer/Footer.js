@@ -19,7 +19,7 @@ function Footer() {
         </div>
 
         <div className="contact-content">
-          <Link to="/feedback"> Feedback </Link>
+          <Link to="/help"> Help </Link>
           <Link to="" target="_blank">
             Contact
           </Link>
@@ -39,7 +39,7 @@ function Footer() {
         </div>
       </div>
       <div className="last">
-        <p>@ 2024 MINGLE | All Rights Reserved</p>
+        <p style={{ fontSize: 16 }}>® 2024 MINGLE | All Rights Reserved</p>
       </div>
     </div>
   );

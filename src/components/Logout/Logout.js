@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUserId } from "../../lib/redux/features/sliceSelectors";
 import { clearUserId } from "../../lib/redux/features/userSlice";
 import { MoonLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 function Logout() {
   const userId = useSelector(selectUserId);
@@ -22,11 +23,13 @@ function Logout() {
       console.log(response.data.message);
       document.cookie = "sessionId=; path=/; max-age=0; secure; samesite=None";
       dispatch(clearUserId());
+      toast.success(`Logged out successfully!`);
     } catch (error) {
       console.error(
         "Logout failed:",
         error.response ? error.response.data : error.message,
       );
+      toast.error(`Error logging out!`);
     }
     setIsLoading(false);
   };

@@ -6,7 +6,6 @@ import About from "./components/About/About";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
-import Feedback from "./components/Feedback/Feedback";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
 import WishList from "./components/Wishlist/WishList";
@@ -31,6 +30,9 @@ import {
 } from "./lib/redux/features/productsSlice";
 import ChatBot from "./components/Chatbot/ChatBot";
 import { setUser, setUserId } from "./lib/redux/features/userSlice";
+import { ToastContainer, Bounce, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import HelpForm from "./components/Feedback/HelpForm";
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -72,6 +74,7 @@ const App = () => {
             action: "remove",
           },
         );
+        toast.error(`${item.name} removed from wishlist!`);
       } else {
         // Add to wishlist
         dispatch(addToWishlist(item)); // Dispatch Redux action to add
@@ -82,6 +85,7 @@ const App = () => {
             action: "add",
           },
         );
+        toast.success(`${item.name} added to wishlist!`);
       }
     } catch (error) {
       console.error("Error updating wishlist", error.message);
@@ -128,6 +132,20 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+          style={{ top: "85px" }}
+        />
         <ScrollToTop />
         <Header />
         <Routes>
@@ -147,10 +165,10 @@ const App = () => {
           <Route path="/sign-up" element={<SignUp />} />
           <Route
             path="/wishlist"
-            element={<WishList onRemoveItem={handleWishlistToggle} />}
+            element={<WishList handleWishlistToggle={handleWishlistToggle} />}
           />
           <Route path="/about" element={<About />} />
-          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/help" element={<HelpForm />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<ErrorPage />} />
