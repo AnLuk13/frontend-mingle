@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./HelpForm.css";
-import emailjs from "emailjs-com"; // Asigură-te că ai instalat EmailJS: npm install emailjs-com
+import emailjs from "emailjs-com";
+import { toast } from "react-toastify";
 
 const HelpForm = () => {
   const [formData, setFormData] = useState({
@@ -15,81 +16,97 @@ const HelpForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    emailjs
-      .send(
-        "YOUR_SERVICE_ID", // ID-ul serviciului din EmailJS
-        "YOUR_TEMPLATE_ID", // ID-ul șablonului din EmailJS
+    try {
+      const result = await emailjs.send(
+        "",
+        "",
         {
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
           message: formData.message,
         },
-        "YOUR_USER_ID", // ID-ul tău de utilizator din EmailJS
-      )
-      .then(
-        (result) => {
-          console.log("Mesaj trimis:", result.text);
-          alert("Mesajul tău a fost trimis cu succes!");
-        },
-        (error) => {
-          console.log("Eroare la trimiterea mesajului:", error.text);
-          alert("A apărut o eroare. Te rugăm să încerci din nou.");
-        },
+        "",
       );
+
+      console.log("Message sent:", result.text);
+      toast.success("Your message has been sent successfully!");
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Error sending a message!");
+    }
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div className="help-container">
-        <h2>Asistență Personalizată</h2>
-        <form className="help-form" onSubmit={handleSubmit}>
-          <label htmlFor="name">Nume:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="subject">Subiect:</label>
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="message">Mesaj:</label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-          />
-
-          <button type="submit">Trimite</button>
-        </form>
+    <main className="main-helpForm_container">
+      <div className="helpForm-title" style={{ textAlign: "center" }}>
+        Help Form
       </div>
-    </div>
+      <form onSubmit={handleSubmit} className="helpForm-container">
+        <div className="input-div">
+          <label className="input-label" htmlFor="name">
+            Name
+          </label>
+          <input
+            className="helpForm-inputCustom"
+            name="name"
+            id="name"
+            type="text"
+            placeholder="Enter your name"
+            onChange={handleChange}
+            value={formData.name}
+          />
+        </div>
+
+        <div className="input-div">
+          <label className="input-label" htmlFor="email">
+            Email
+          </label>
+          <input
+            className="helpForm-inputCustom"
+            name="email"
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            onChange={handleChange}
+            value={formData.email}
+          />
+        </div>
+
+        <div className="input-div">
+          <label className="input-label" htmlFor="subject">
+            Subject
+          </label>
+          <input
+            className="helpForm-inputCustom"
+            name="subject"
+            id="subject"
+            type="text"
+            placeholder="Enter the subject"
+            onChange={handleChange}
+            value={formData.subject}
+          />
+        </div>
+
+        <div className="input-div">
+          <label htmlFor="message" className="input-label">
+            Message
+          </label>
+          <textarea
+            className="helpForm-inputCustom helpFormTextArea"
+            name="message"
+            id="message"
+            placeholder="Enter your message"
+            onChange={handleChange}
+            value={formData.message}
+          />
+        </div>
+
+        <button className="helpForm-button">Send Message</button>
+      </form>
+    </main>
   );
 };
 

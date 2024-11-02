@@ -1,42 +1,114 @@
-.help-container {
+.main-helpForm_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 100px;
+    gap: 30px;
+    min-height: 522px;
+}
+
+.helpForm-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 96px;
+    line-height: 121%;
+    text-transform: uppercase;
+    color: var(--secondary);
+    padding: 0 40px;
+    transition: 0.3s ease;
+    width: fit-content;
+}
+
+.helpForm-title:hover {
+    letter-spacing: 4px;
+    cursor: default;
+}
+
+.helpForm-container {
+    position: relative;
+    max-width: 354px;
     width: 100%;
-    max-width: 600px;
-    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    gap: 15px;
 }
 
-h2 {
-    text-align: center;
-    color: #333;
+.helpForm-container .input-div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.help-form label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-.help-form input,
-.help-form textarea {
+.input-label {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 156%;
+    color: var(--secondary);
+    text-transform: uppercase;
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
 }
 
-.help-form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
+.helpForm-inputCustom {
+    border-radius: 99px;
+    padding: 10px 24px;
+    width: 354px;
+    height: 48px;
+    background: var(--background);
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
     font-size: 16px;
 }
 
-.help-form button:hover {
-    background-color: #0056b3;
+.helpForm-inputCustom:hover, .helpForm-inputCustom:focus, .helpForm-inputCustom:active {
+    outline: none;
 }
+
+.helpFormTextArea {
+    border-radius: 30px;
+    padding-top: 12px;
+    resize: vertical;         /* Allow resize only on the y-axis */
+    min-height: 48px;          /* Initial height */
+    max-height: 144px;          /* Maximum height up to 5 lines */
+    overflow-y: auto;
+}
+
+.helpForm-button {
+    text-transform: uppercase;
+    border: 1px solid var(--secondary);
+    border-radius: 99px;
+    padding: 12px 16px;
+    width: 354px;
+    height: 48px;
+    font-size: medium;
+    color: white;
+    background: black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(124, 120, 120, 0.19);
+}
+
+.helpForm-button:hover {
+    cursor: pointer;
+    background: #151515;
+    border: 1px solid black;
+}
+
+.help-error {
+    position: absolute;
+    top: -38px;
+    font-size: small;
+    color: red;
+
+}
+
+@media only screen and (max-width: 768px) {
+    .helpForm-title {
+        font-size: 50px;
+        padding: 15px 10px 0;
+    }
+}
+
+
+
