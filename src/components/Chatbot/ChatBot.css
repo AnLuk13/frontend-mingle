@@ -18,12 +18,12 @@
     .chatBox {
         position: fixed;
         bottom: 0;
-        top: 80px;  /* Leave 80px from the top */
+        top: 80px;
         right: 0;
         left: 0;
         width: 100%;
-        height: calc(100dvh - env(keyboard-inset-height, 0px) - 80px); /* Adjust for virtual keyboard height */
-        border-radius: 0; /* Remove border radius for full-screen */
+        height: calc(100dvh - env(keyboard-inset-height, 0px) - 80px);
+        border-radius: 0;
     }
 }
 

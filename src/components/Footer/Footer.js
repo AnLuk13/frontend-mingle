@@ -9,7 +9,7 @@ function Footer() {
         <div className="contact-content">
           <Link to="/"> Collection </Link>
           <Link to="/about">About</Link>
-          <Link to="/help"> Help </Link>
+          <Link to="/support"> Help </Link>
         </div>
 
         <div className="contact-content">
@@ -19,7 +19,7 @@ function Footer() {
         </div>
 
         <div className="contact-content">
-          <Link to="/help"> FAQ </Link>
+          <Link to="/support"> FAQ </Link>
           <Link to="" target="_blank">
             Contact
           </Link>

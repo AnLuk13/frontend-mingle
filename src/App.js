@@ -32,7 +32,7 @@ import ChatBot from "./components/Chatbot/ChatBot";
 import { setUser, setUserId } from "./lib/redux/features/userSlice";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import HelpForm from "./components/Feedback/HelpForm";
+import SupportForm from "./components/Support/SupportForm";
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -58,15 +58,11 @@ const App = () => {
         window.location.href = "/sign-in";
         return;
       }
-
-      // Check if the item is already in the wishlist
       const isInWishlist = wishlist.some(
         (wishlistItem) => wishlistItem._id === item._id,
       );
-
       if (isInWishlist) {
-        // Remove from wishlist
-        dispatch(removeFromWishlist(item._id)); // Dispatch Redux action to remove
+        dispatch(removeFromWishlist(item._id));
         await axios.put(
           `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
           {
@@ -76,7 +72,6 @@ const App = () => {
         );
         toast.error(`${item.name} removed from wishlist!`);
       } else {
-        // Add to wishlist
         dispatch(addToWishlist(item)); // Dispatch Redux action to add
         await axios.put(
           `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
@@ -113,7 +108,7 @@ const App = () => {
           const user = response.data;
           if (user && user.wishlist) {
             dispatch(setUser(user));
-            dispatch(setWishlist(user.wishlist)); // Dispatch action to set the initial wishlist
+            dispatch(setWishlist(user.wishlist));
           }
         } catch (error) {
           console.error("Error fetching user:", error.message);
@@ -168,7 +163,7 @@ const App = () => {
             element={<WishList handleWishlistToggle={handleWishlistToggle} />}
           />
           <Route path="/about" element={<About />} />
-          <Route path="/help" element={<HelpForm />} />
+          <Route path="/support" element={<SupportForm />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<ErrorPage />} />
