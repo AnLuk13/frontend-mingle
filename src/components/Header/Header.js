@@ -45,11 +45,7 @@ const Header = () => {
       <nav>
         <div className="navtop">
           <h3>
-            <Link
-              to="/"
-              onClick={() => showMobileSidebar && setShowMobileSidebar(false)}
-              className="project-title"
-            >
+            <Link to="/" onClick={handleItemClick} className="project-title">
               MINGLE®
             </Link>
           </h3>
