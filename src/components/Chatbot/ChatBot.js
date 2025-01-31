@@ -62,17 +62,14 @@ const ChatBot = () => {
 
     sendMessage(`You: ${input}`);
     setInput("");
-    setIsLoading(true); // Activează mesajul "Loading..." când începe solicitarea
-
+    setIsLoading(true);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/openAI`,
         { message: input },
       );
       const { data } = response;
-
-      setIsLoading(false); // Dezactivează mesajul "Loading..." la primirea răspunsului
-
+      setIsLoading(false);
       if (data.message) {
         sendMessage(data.message);
       } else if (Array.isArray(data) && data.length > 0) {
@@ -89,7 +86,7 @@ const ChatBot = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setIsLoading(false); // Dezactivează mesajul "Loading..." în caz de eroare
+      setIsLoading(false);
       sendMessage("An error occurred. Please try again.");
     }
   };
