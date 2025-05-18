@@ -100,7 +100,7 @@
 
 @media only screen and (max-width: 984px) {
   .collection-title {
-    font-size: 50px;
+    font-size: 58px;
     padding: 15px 10px 0;
   }
 
@@ -115,7 +115,17 @@
   }
 }
 
+@media only screen and (min-width: 461px) and (max-width: 984px) {
+    .collection-title {
+        padding-bottom: 16px;
+    }
+}
+
 @media only screen and (max-width: 460px) {
+    .collection-title {
+        font-size: 50px;
+    }
+
     .title-btns-container {
         gap: 15px;
     }

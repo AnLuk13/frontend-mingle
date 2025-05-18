@@ -50,6 +50,7 @@ const Header = () => {
             </Link>
           </h3>
           <div
+            data-testid="mobile-menu-icon"
             className={`mobile-menu-icon ${!showMobileSidebar ? "active" : ""}`}
             onClick={() => {
               setShowMobileSidebar(!showMobileSidebar);

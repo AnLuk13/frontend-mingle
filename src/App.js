@@ -72,7 +72,7 @@ const App = () => {
         );
         toast.error(`${item.name} removed from wishlist!`);
       } else {
-        dispatch(addToWishlist(item)); // Dispatch Redux action to add
+        dispatch(addToWishlist(item));
         await axios.put(
           `${process.env.REACT_APP_API_URL}/users/${userId}/wishlist`,
           {
