@@ -63,31 +63,90 @@ const ChatBot = () => {
     sendMessage(`You: ${input}`);
     setInput("");
     setIsLoading(true);
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/openAI`,
-        { message: input },
+        {
+          message: input,
+        }
       );
       const { data } = response;
+
       setIsLoading(false);
-      if (data.message) {
-        sendMessage(data.message);
-      } else if (Array.isArray(data) && data.length > 0) {
-        data.forEach((item) => {
-          sendMessage(
-            `- ${item.name}: ${sliceDescription(item.description)}. Price: $${
-              item.price
-            }. In stock: ${item.stock}`,
-            item._id,
-          );
-        });
+
+      if (!data.success) {
+        // Handle error cases with suggestions
+        sendMessage(`Error: ${data.message}`);
+
+        // Handle suggestion lists
+        if (data.suggestions?.length > 0) {
+          sendMessage("Try adjusting your search by:");
+          data.suggestions.forEach((suggestion) => {
+            sendMessage(`• ${suggestion}`);
+          });
+        }
       } else {
-        sendMessage("No matching products found.");
+        // Handle successful product results
+        if (data.products?.length > 0) {
+          sendMessage(`Found ${data.count} matching products:`);
+
+          data.products.forEach((product) => {
+            const productDetails = [
+              `• ${product.name}`,
+              `  Brand: ${product.brand || "N/A"}`,
+              `  Price: $${product.price.toFixed(2)}`,
+              `  Stock: ${product.stock} units`,
+              `  Desc: ${
+                product.description
+                  ? sliceDescription(product.description)
+                  : "No description available"
+              }`,
+              product.discount ? "  🏷️ On Sale!" : null,
+            ]
+              .filter(Boolean) // Remove null/undefined entries
+              .join("\n");
+
+            sendMessage(productDetails, product._id);
+          });
+        } else {
+          sendMessage("No products found matching your criteria.");
+          sendMessage("Try broadening your search or using different terms.");
+        }
       }
     } catch (error) {
       console.error("Error fetching data:", error);
       setIsLoading(false);
-      sendMessage("An error occurred. Please try again.");
+
+      if (error.response?.status === 400) {
+        // Handle validation errors
+        sendMessage("Please provide more specific details such as:");
+        if (error.response.data.suggestions) {
+          error.response.data.suggestions.forEach((suggestion) => {
+            sendMessage(`• ${suggestion}`);
+          });
+        }
+      } else if (error.response?.status === 404) {
+        // Handle no results found
+        sendMessage(error.response.data.message);
+        if (error.response.data.suggestions) {
+          sendMessage("Suggestions to improve your search:");
+          error.response.data.suggestions.forEach((suggestion) => {
+            sendMessage(`• ${suggestion}`);
+          });
+        }
+      } else if (error.response?.status === 500) {
+        // Handle server errors
+        sendMessage("Sorry, there was a server error. Please try again later.");
+      } else if (error.request) {
+        // Handle network errors
+        sendMessage(
+          "Unable to connect to the server. Please check your internet connection."
+        );
+      } else {
+        // Handle unexpected errors
+        sendMessage("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
