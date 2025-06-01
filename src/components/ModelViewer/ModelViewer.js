@@ -62,6 +62,8 @@ const ModelViewer = ({ item, handleWishlistToggle, setQrModalItem }) => {
   }, []);
 
   useEffect(() => {
+    setVariants([{ label: "Default", value: "Default" }]);
+
     const modelViewer = model.current;
     if (modelViewer) {
       modelViewer.addEventListener("load", () => {
@@ -76,19 +78,19 @@ const ModelViewer = ({ item, handleWishlistToggle, setQrModalItem }) => {
 
           // Filter out duplicates
           const uniqueVariants = newVariants.filter(
-            (newVar) => !prev.some((prevVar) => prevVar.value === newVar.value),
+            (newVar) => !prev.some((prevVar) => prevVar.value === newVar.value)
           );
 
           return [...prev, ...uniqueVariants];
         });
       });
     }
-  }, []);
+  }, [item._id]); // added dependency, previously empty
 
   useEffect(() => {
     if (wishlist) {
       const isInWishlist = wishlist.some(
-        (wishlistItem) => wishlistItem._id === item._id,
+        (wishlistItem) => wishlistItem._id === item._id
       );
       setIsInWishlist(isInWishlist);
     }
@@ -107,7 +109,7 @@ const ModelViewer = ({ item, handleWishlistToggle, setQrModalItem }) => {
   return (
     <div className="model-view">
       <model-viewer
-        key={item.id}
+        key={item._id}
         ref={model}
         style={{
           background: "#f1efeb",
